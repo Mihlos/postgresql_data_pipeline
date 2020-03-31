@@ -21,6 +21,7 @@ The benefits of the schema are:
 **Fact Table**
 *songplays* - records in log data associated with song plays i.e. records with page NextSong
 fields: songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent
+
 **Dimension Tables**
 *users* - users in the app. 
 fields: user_id, first_name, last_name, gender, level
@@ -32,13 +33,30 @@ fields: artist_id, name, location, latitude, longitude
 fields: start_time, hour, day, week, month, year, weekday
 
 # ETL pipeline
+* 1- Conection to the database.
+* 2- Get all the files from song_data.
+* 3- For each file a DataFrame is created with the desired fields.
+* 4- Insert the rows into songs table and artist table.
+* 5- Get all the files from log_data.
+* 6- For each log file:
+    * Filter by NextSong action
+    * Convert timestamp column to datetime
+    * Insert time data records
+    * Create users table
+    * Inster users table
+    * Get songid and artistid from song and artist tables
+    * Insert songplay record
 
 # Files description.
 **create_tables.py** - Script for creating the database and tables.
+
 **sql_queries.py** - Script that contains the needed instructions to drop and craeate tables. Also to insert rows and needed queries.
+
 **etl.py** - Script that fetch the data from the different folders and create the data pipelines to transform and load the data
 into our Postgres DataBase.
+
 **etl.ipynb** - Notebook for prototyping our data pipelines.
+
 **test.ipynb** - Notebook for testing purposes.
 
 # How to run the Python scripts
