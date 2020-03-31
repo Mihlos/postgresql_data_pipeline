@@ -6,6 +6,17 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    '''
+    Create the DataFrame and list of values to insert into.
+    For song and artist different columns of the same DF are selected.
+    
+    Parameters:
+        cur (object): connection cursor.
+        filepath (str): file path of the json file to save into postgresql
+        
+    Returns:
+        None
+    '''
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -19,6 +30,18 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    '''
+    Create the DataFrame and list of values to insert into.
+    For time, users and songplay different columns of the same DF are selected.
+    For songplay a query to get song_id and artist_id is needed.
+    
+    Parameters:
+        cur (object): connection cursor.
+        filepath (str): file path of the json file to save into postgresql
+        
+    Returns:
+        None
+    '''
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -47,7 +70,7 @@ def process_log_file(cur, filepath):
     for i, row in user_df.iterrows():
         cur.execute(user_table_insert, row)
 
-    # insert songplay records
+    # songplay records
     for index, row in df.iterrows():
         
         # get songid and artistid from song and artist tables
@@ -65,6 +88,19 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    '''
+    Get all the files from the directories.
+    Call the desired function (songs or logs) for each file.
+    
+    Parameters:
+        cur (object): connection cursor.
+        conn (object): connection object for our database
+        filepath (str): file path of directory that contais the json files.
+        fucn (function): function to call, there are two. For songs and logs.
+        
+    Returns:
+        None
+    '''
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
